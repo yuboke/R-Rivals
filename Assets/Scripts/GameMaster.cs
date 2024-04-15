@@ -225,7 +225,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
     void SendPlayerCard()
     {
         // ŠÖ” "RPC_OnRecievedCard()" ‚ğ‘Šè‚ÌŠÂ‹«‚ÅÀs‚·‚é
-        photonView.RPC(nameof(RPC_OnRecievedCard), RpcTarget.Others, player.SubmitCard.Base.Number);
+        photonView.RPC(nameof(RPC_OnRecievedCard), RpcTarget.Others, player.SubmitCard.Base.Number, player.IsFirstSubmit);
+
+        // –§’ãŒø‰Ê‚ğ‰ğœ
+        player.IsFirstSubmit = false;
     }
 
     /// <summary>
@@ -233,9 +236,13 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     /// <param name="number"></param>
     [PunRPC]
-    void RPC_OnRecievedCard(int number)
+    void RPC_OnRecievedCard(int number, bool isOpen)
     {
         enemy.SetSubmitCard(number);
+        if (isOpen)
+        {
+            enemy.SubmitCard.Open();
+        }
     }
 
     /// <summary>
